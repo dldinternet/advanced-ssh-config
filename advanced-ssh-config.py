@@ -29,7 +29,7 @@ class advanced_ssh_config( ):
         self.parser = ConfigParser.ConfigParser( )
         self.parser.SECTCRE = re.compile(
             r'\['                                 # [
-            r'(?P<header>.+)'                  # very permissive!
+            r'(?P<header>.+)'                     # very permissive!
             r'\]'                                 # ]
         )
 
@@ -57,12 +57,14 @@ class advanced_ssh_config( ):
 
 
     def debug( self, str = None, force = False ):
-        # if self.verbose or force:
-        #     if str:
-        #         sys.stderr.write( "Debug: %s\n" % str )
-        #     else:
-        #         sys.stderr.write( "\n" )
-        self.log.debug(str and str or '')
+        if self.verbose or force:
+            self.log.debug(str and str or '')
+            #     if str:
+            #         sys.stderr.write( "Debug: %s\n" % str )
+            #     else:
+            #         sys.stderr.write( "\n" )
+        else:
+            self.log.info(str and str or '')
 
     def conf_get( self, key, host, default = None, vardct = None ):
         for section in self.parser.sections( ):
@@ -92,7 +94,7 @@ class advanced_ssh_config( ):
 
         #if not (section and sectdct):
         #    raise ConfigError("'%s' section not found!" % self.hostname )
-        self.log.debug( "section '%s' " % section )
+        self.log.info( "section '%s' " % section )
 
         # Parse special routing
         path = self.hostname.split( '/' )
@@ -237,5 +239,5 @@ if __name__ == "__main__":
         # noop
         sys.stderr.write(e.message)
     except Exception as e:
+        sys.stderr.write( "ERROR: ")
         log.debug(e.__str__())
-        print "ERROR: 'debug' value must be an integer from 0 to 9."
